@@ -38,6 +38,7 @@ def run_container():
 	
 
 def delete_container():
+	docker_status()
 	print("................Delete Container..................")
 	container_name = input("Enter the image name to delete :")
 	cmd = f"docker rm {container_name}" # Delete image
@@ -50,25 +51,33 @@ def network_details():
 	net_detail = os.popen("docker network inspect bridge").read()
 	net = json.loads(net_detail)[0]
 	for i in net["Containers"].values():
-		print(f'Image Name | {i["Name"]} | Mac Address | {i["MacAddress"]} | IPV4 Address | {i["IPv4Address"]}' ) # gets the details of the active containers
-	#console.print(net_detail,style="bold green")
+		print(f'Image Name | {i["Name"]} | Mac Address | {i["MacAddress"]} | IPV4 Address | {i["IPv4Address"]}' ) # gets the details of the active image
 
+def menu_network():
+	print("\t1.Connect to network")
+	print("\t2.Disconnect from network")
+	
 def modify_network():
-	print("..............Modifying Network.............")
-	mod = os.popen("docker network ls").read()
-	print(mod)
-	network_name = input("Enter the network name : ")
-	container_image = input("Enter the container name to disconnect from network :")
-	print("Disconnecting............")
-	cmd =f"docker network disconnect {network_name} {container_image}" # Disconnects from a particular network
-	dis = os.popen(cmd).read()
-	console.print("Disconnected network",style="bold red")
-	print("Connecting................")
-	cmd1 = f"docker network connect {network_name} {container_image}" # Connects to a particular network
-	con = os.popen(cmd1).read()
-	console.print("Connected to network",style="bold red")
-	
-	
+	menu_network()
+	cho = int(input("Enter your choice"))
+	if cho == 1:
+		mod = os.popen("docker network ls").read()
+		print(mod)
+		network_name = input("Enter the network name : ")
+		container_image = input("Enter the container name to connect to network :")
+		print("Connecting................")
+		cmd1 = f"docker network connect {network_name} {container_image}" # Connects to a particular network
+		con = os.popen(cmd1).read()
+		console.print("Connected to network",style="bold red")
+	elif cho == 2:
+		mod = os.popen("docker network ls").read()
+		print(mod)
+		network_name = input("Enter the network name : ")
+		container_image = input("Enter the container name to disconnect from network :")
+		print("Disconnecting............")
+		cmd =f"docker network disconnect {network_name} {container_image}" # Disconnects from a particular network
+		dis = os.popen(cmd).read()
+		console.print("Disconnected network",style="bold red")
 
 while True:
 	menu()
